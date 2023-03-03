@@ -37,17 +37,17 @@ function Tree(array) {
   }
 
   function deleteNode(root, value) {
-    if (root === null) return root;
+    if (root === value) return root;
 
     if (value < root.value) {
       root.left = deleteNode(root.left, value);
     }
 
     if (value > root.value) {
-      root.right = deleteNode(root.right, value);
+      root.right = deleteNode(root.right, value); // 3,3
     }
 
-    if (Value === root.value) {
+    if (value === root.value) {
       if (root.right === null && root.left === null) {
         return null;
       } else if (root.left !== null && root.right === null) {
@@ -55,15 +55,18 @@ function Tree(array) {
       } else if (root.left === null && root.right !== null) {
         return root.right;
       } else {
-        const minValue = findMinValue(root.right).value;
+        const minValue = findMinValue(root.right).value; //324
+        console.log(root.value);
         root.value = minValue;
+        console.log(root.value);
         root.right = deleteNode(root.right, minValue);
       }
     }
 
     function findMinValue(root) {
+      //324
       if (root.left === null) {
-        return root;
+        return root; //324
       }
       return findMinValue(root.left);
     }
@@ -74,7 +77,7 @@ function Tree(array) {
 
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
-tree.deleteNode(tree.rootNode, 8);
+tree.deleteNode(tree.rootNode, 67);
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node.right !== null) {
