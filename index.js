@@ -19,32 +19,46 @@ function Tree(array) {
   const finalArray = [...new Set(sortedArray)];
   let rootNode = buildTree(finalArray, 0, finalArray.length - 1);
 
-  function insert(root, node) {
+  function insert(root, value) {
     if (root === null) {
-      const newNode = NodeFactory(node);
+      const newNode = NodeFactory(value);
       root = newNode;
       return root;
     }
 
-    if (node < root.value) {
-      root.left = insert(root.left, node);
+    if (value < root.value) {
+      root.left = insert(root.left, value);
     }
 
-    if (node > root.value) {
-      root.right = insert(root.right, node);
+    if (value > root.value) {
+      root.right = insert(root.right, value);
     }
     return root;
   }
 
-  function deleteNode(root, node) {
-    if (root === node) return root;
+  function deleteNode(root, value) {
+    if (root === null) return root;
 
-    if (node < root.value) {
-      root.left = deleteNode(root.left, node);
+    if (value < root.value) {
+      root.left = deleteNode(root.left, value);
     }
 
-    if (node > root.value) {
-      root.right = deleteNode(root.right, node);
+    if (value > root.value) {
+      root.right = deleteNode(root.right, value);
+    }
+
+    if (Value === root.value) {
+      if (root.right === null && root.left === null) {
+        return null;
+      } else if (root.left !== null && root.right === null) {
+        return root.left;
+      } else if (root.left === null && root.right !== null) {
+        return root.right;
+      } else {
+        const minValue = findMinValue(root.right).value;
+        root.value = minValue;
+        root.right = deleteNode(root.right, minValue);
+      }
     }
 
     function findMinValue(root) {
@@ -53,19 +67,7 @@ function Tree(array) {
       }
       return findMinValue(root.left);
     }
-
-    if (root.right === null && root.left === null) {
-      return null;
-    } else if (root.left !== null && root.right === null) {
-      return root.left;
-    } else if (root.left === null && root.right !== null) {
-      return root.right;
-    } else {
-      const minValue = findMinValue(root.right).value;
-      root.value = minValue;
-      root.right = deleteNode(root.right, minValue);
-      return root;
-    }
+    return root;
   }
   return { rootNode, insert, deleteNode };
 }
