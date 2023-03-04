@@ -86,6 +86,7 @@ function Tree(array) {
   function levelOrder(root, func = null, array = []) {
     let root = rootNode;
     console.log(root)
+    
     //recursively traverse breadth-first 
       // push ogNode to array
       // root === array[0], shift root & return value, push root.left, push root.right
