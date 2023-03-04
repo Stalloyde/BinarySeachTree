@@ -36,15 +36,19 @@ function Tree(array) {
     return root;
   }
 
-  function deleteNode(root, value) {
+  function insertNode(value) {
+    insert(rootNode, value);
+  }
+
+  function del(root, value) {
     if (root === value) return root;
 
     if (value < root.value) {
-      root.left = deleteNode(root.left, value);
+      root.left = del(root.left, value);
     }
 
     if (value > root.value) {
-      root.right = deleteNode(root.right, value);
+      root.right = del(root.right, value);
     }
 
     if (value === root.value) {
@@ -57,7 +61,7 @@ function Tree(array) {
       } else {
         const minValue = findMinValue(root.right).value;
         root.value = minValue;
-        root.right = deleteNode(root.right, minValue);
+        root.right = del(root.right, minValue);
       }
     }
 
@@ -70,9 +74,16 @@ function Tree(array) {
     return root;
   }
 
+  function deleteNode(value) {
+    del(rootNode, value);
+  }
+
   function find(root, value) {
+    if (root === null) {
+      return 'none';
+    }
     if (root === value) {
-      return root;
+      return root.value;
     }
     if (value > root.value) {
       return find(root.right, value);
@@ -80,39 +91,59 @@ function Tree(array) {
     if (value < root.value) {
       return find(root.left, value);
     }
+
     return root;
   }
 
-  function levelOrder(root, func = null, array = []) {
-    let root = rootNode;
-    console.log(root)
-    
-    //recursively traverse breadth-first 
-      // push ogNode to array
-      // root === array[0], shift root & return value, push root.left, push root.right
-      // root === array[0], so root changes to root.left. shift root & return value, push root.left, push root right.
-      // root === array[0], so root changes to ogRoot.right, shirt root & return value, push root.left, push root right.
-      // continue pattern recursively. if (root.left & root.right === null), return  
+  function findNode(value) {
+    return find(rootNode, value);
+  }
 
+  function levelOrder(root, queue = [root], printNode) {
+    if (!queue.length || !root) {
+      return;
+    }
+
+    if (root.left !== null && root.right !== null) {
+      queue.push(root.left, root.right);
+    }
+
+    if (root.left !== null && root.right === null) {
+      queue.push(root.left);
+    }
+
+    if (root.left === null && root.right !== null) {
+      queue.push(root.right);
+    }
+
+    const node = queue.shift().value; //node should be renamed to NODE, then passed into FUNCTION as an argument
+    const newRoot = queue[0];
+    printNode = function print(parameter) {
+      console.log(parameter);
+    };
+    levelOrder(newRoot, queue, printNode(node));
+  }
+
+  //recursively traverse breadth-first DONE
   //Use each node as arguments in function(), then return an array of the result of each node that goes through the function}
   //function() can be anything.
   // if levelOrder(null), return just the plain values of each node
-  return { rootNode, insert, deleteNode, find, levelOrder };
+  return { rootNode, insertNode, deleteNode, findNode, levelOrder };
 }
 
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
-const root = tree.rootNode;
-console.log(tree.find(root, 324));
+console.log(tree.findNode(8));
 
-// const prettyPrint = (node, prefix = '', isLeft = true) => {
-//   if (node.right !== null) {
-//     prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-//   }
-//   console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
-//   if (node.left !== null) {
-//     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-//   }
-// };
+const prettyPrint = (node, prefix = '', isLeft = true) => {
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+  }
+  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+  }
+};
+prettyPrint(tree.rootNode);
 
-// prettyPrint(tree.rootNode);
+// console.log(tree.levelOrder(treeRoot));
