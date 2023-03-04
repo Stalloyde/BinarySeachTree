@@ -82,7 +82,21 @@ function Tree(array) {
     }
     return root;
   }
-  return { rootNode, insert, deleteNode, find };
+
+  function levelOrder(root, func = null, array = []) {
+    let root = rootNode;
+    console.log(root)
+    //recursively traverse breadth-first 
+      // push ogNode to array
+      // root === array[0], shift root & return value, push root.left, push root.right
+      // root === array[0], so root changes to root.left. shift root & return value, push root.left, push root right.
+      // root === array[0], so root changes to ogRoot.right, shirt root & return value, push root.left, push root right.
+      // continue pattern recursively. if (root.left & root.right === null), return  
+
+  //Use each node as arguments in function(), then return an array of the result of each node that goes through the function}
+  //function() can be anything.
+  // if levelOrder(null), return just the plain values of each node
+  return { rootNode, insert, deleteNode, find, levelOrder };
 }
 
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
