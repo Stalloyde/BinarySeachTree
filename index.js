@@ -183,6 +183,19 @@ function Tree(array) {
     return postorder(rootNode, callback);
   }
 
+  function height(root) {
+    if (!root) return;
+    let height = 0;
+    height(root.left);
+    height += 1;
+    console.log(height);
+    height(root.right);
+  }
+
+  function heightNode() {
+    return height(rootNode);
+  }
+
   return {
     rootNode,
     insertNode,
