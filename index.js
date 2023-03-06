@@ -99,9 +99,10 @@ function Tree(array) {
     return find(rootNode, value);
   }
 
-  function levelOrder(root, queue = [root], printNode) {
+  function levelOrder(root, queue = [root], callback, nodeArray = []) {
     if (!queue.length || !root) {
-      return;
+      console.log(nodeArray);
+      return nodeArray;
     }
 
     if (root.left !== null && root.right !== null) {
@@ -116,24 +117,31 @@ function Tree(array) {
       queue.push(root.right);
     }
 
-    const node = queue.shift().value; //node should be renamed to NODE, then passed into FUNCTION as an argument
+    const node = queue.shift().value;
     const newRoot = queue[0];
-    printNode = function print(parameter) {
-      console.log(parameter);
-    };
-    levelOrder(newRoot, queue, printNode(node));
+    if (callback) {
+      nodeArray.push(callback(node));
+    } else {
+      nodeArray.push(node);
+    }
+    levelOrder(newRoot, queue, callback, (nodeArray = [...nodeArray]));
   }
 
-  //recursively traverse breadth-first DONE
-  //Use each node as arguments in function(), then return an array of the result of each node that goes through the function}
-  //function() can be anything.
-  // if levelOrder(null), return just the plain values of each node
-  return { rootNode, insertNode, deleteNode, findNode, levelOrder };
+  function levelOrderNode(callback) {
+    levelOrder(rootNode, undefined, callback);
+  }
+
+  return { rootNode, insertNode, deleteNode, findNode, levelOrderNode };
 }
 
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
-console.log(tree.levelOrder);
+
+function doubleUpNode(parameter) {
+  return parameter * 2;
+}
+
+tree.levelOrderNode();
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node.right !== null) {
@@ -145,5 +153,3 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 prettyPrint(tree.rootNode);
-
-// console.log(tree.levelOrder(treeRoot));
