@@ -131,37 +131,17 @@ function Tree(array) {
     levelOrder(rootNode, undefined, callback);
   }
 
-  function inorder(root, queue = [root], callback, nodeArray = []) {
-    if (!queue.length || !root) {
-      console.log(nodeArray);
-      return nodeArray;
-    }
-
-    if (root.left !== null && root.right !== null) {
-      queue.push(root.left, root.right);
-    }
-
-    if (root.left !== null && root.right === null) {
-      queue.push(root.left);
-    }
-
-    if (root.left === null && root.right !== null) {
-      queue.push(root.right);
-    }
-
-    const node = queue.shift().value;
-    const newRoot = queue[0];
-    if (callback) {
-      nodeArray.push(callback(node));
-    } else {
-      nodeArray.push(node);
-    }
-    inorder(newRoot, queue, callback, (nodeArray = [...nodeArray]));
+  function inorder(root, nodeArray = []) {
+    if (!root) return;
+    console.log(root.value);
+    inorder(root.left, (nodeArray = [...nodeArray]));
+    // nodeArray.push(root.value);
+    // console.log(nodeArray);
+    inorder(root.right, (nodeArray = [...nodeArray]));
   }
-
-  function inorderNode(callback) {
-    inorder(rootNode, undefined, callback);
-  }
+  // function inorderNode(callback) {
+  //   inorder(rootNode, callback);
+  // }
 
   return {
     rootNode,
@@ -169,10 +149,10 @@ function Tree(array) {
     deleteNode,
     findNode,
     levelOrderNode,
-    inorderNode,
+    inorder,
   };
 }
-
+//
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
 
@@ -180,7 +160,7 @@ function doubleUpNode(parameter) {
   return parameter * 2;
 }
 
-tree.inorderNode();
+tree.inorder(tree.rootNode);
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node.right !== null) {
