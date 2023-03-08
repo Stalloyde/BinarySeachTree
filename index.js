@@ -229,4 +229,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 };
 
 prettyPrint(tree.rootNode);
-console.log(tree.heightNode(67));
+tree.heightNode(67);
