@@ -184,16 +184,18 @@ function Tree(array) {
   }
 
   function height(root) {
-    if (!root) return;
-    let height = 0;
-    height(root.left);
-    height += 1;
-    console.log(height);
-    height(root.right);
+    if (!root) return 0;
+    root.left = height(root.left);
+    root.right = height(root.right);
+    return Math.max(root.left + 1, root.right + 1);
   }
 
-  function heightNode() {
-    return height(rootNode);
+  function heightNode(node) {
+    if (!node) {
+      return height(rootNode);
+    } else {
+      return height(findNode(node));
+    }
   }
 
   return {
@@ -205,6 +207,7 @@ function Tree(array) {
     inorderNode,
     preorderNode,
     postorderNode,
+    heightNode,
   };
 }
 
@@ -215,8 +218,6 @@ function doubleUpNode(parameter) {
   return parameter * 2;
 }
 
-console.log(tree.postorderNode());
-
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node.right !== null) {
     prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
@@ -226,4 +227,6 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
   }
 };
+
 prettyPrint(tree.rootNode);
+console.log(tree.heightNode(67));
