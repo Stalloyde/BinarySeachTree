@@ -36,10 +36,6 @@ function Tree(array) {
     return root;
   }
 
-  function insertNode(value) {
-    insert(rootNode, value);
-  }
-
   function del(root, value) {
     if (root === value) return root;
 
@@ -74,10 +70,6 @@ function Tree(array) {
     return root;
   }
 
-  function deleteNode(value) {
-    del(rootNode, value);
-  }
-
   function find(root, value) {
     if (root === null) {
       return 'none';
@@ -93,10 +85,6 @@ function Tree(array) {
     }
 
     return root;
-  }
-
-  function findNode(value) {
-    return find(rootNode, value);
   }
 
   function levelOrder(root, queue = [root], callback, nodeArray = []) {
@@ -127,10 +115,6 @@ function Tree(array) {
     return nodeArray;
   }
 
-  function levelOrderNode(callback) {
-    return levelOrder(rootNode, undefined, callback);
-  }
-
   function inorder(root, callback, nodeArray = []) {
     if (!root) return;
     inorder(root.left, callback, nodeArray);
@@ -142,10 +126,6 @@ function Tree(array) {
     }
     inorder(root.right, callback, nodeArray);
     return nodeArray;
-  }
-
-  function inorderNode(callback) {
-    return inorder(rootNode, callback);
   }
 
   function preorder(root, callback, nodeArray = []) {
@@ -161,10 +141,6 @@ function Tree(array) {
     return nodeArray;
   }
 
-  function preorderNode(callback) {
-    return preorder(rootNode, callback);
-  }
-
   function postorder(root, callback, nodeArray = []) {
     if (!root) return;
 
@@ -178,25 +154,74 @@ function Tree(array) {
     }
     return nodeArray;
   }
+  function height(root) {
+    if (!root) return -1;
+    let leftHeight = height(root.left);
+    let rightHeight = height(root.right);
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  function depth(root, node) {
+    if (!root) return -1;
+
+    if (root === node) {
+      return 0;
+    }
+
+    let leftDepth = depth(root.left, node);
+    let rightDepth = depth(root.right, node);
+
+    if (leftDepth !== -1) {
+      return leftDepth + 1;
+    } else if (rightDepth !== -1) {
+      return rightDepth + 1;
+    } else {
+      return -1;
+    }
+  }
+
+  function insertNode(value) {
+    insert(rootNode, value);
+  }
+
+  function deleteNode(value) {
+    del(rootNode, value);
+  }
+
+  function findNode(value) {
+    return find(rootNode, value);
+  }
+
+  function levelOrderNode(callback) {
+    return levelOrder(rootNode, undefined, callback);
+  }
+
+  function inorderNode(callback) {
+    return inorder(rootNode, callback);
+  }
+
+  function preorderNode(callback) {
+    return preorder(rootNode, callback);
+  }
 
   function postorderNode(callback) {
     return postorder(rootNode, callback);
   }
 
-  function height(root) {
-    if (!root) return 0;
-    root.left = height(root.left);
-    root.right = height(root.right);
-    return Math.max(root.left + 1, root.right + 1);
+  function heightNode(node) {
+    return !node ? height(rootNode) : height(findNode(node));
   }
 
-  function heightNode(node) {
-    if (!node) {
-      return height(rootNode);
-    } else {
-      return height(findNode(node));
-    }
+  function depthNode(node, root = rootNode) {
+    return !node ? depth(rootNode, rootNode) : depth(rootNode, findNode(node));
   }
+
+  function isBalanced() {
+    return height(rootNode);
+  }
+  //return max height of left subtree
+  // return max height of right subtree
+  //if left subtree - right subtree > 1 return false, else return true
 
   return {
     rootNode,
@@ -208,15 +233,17 @@ function Tree(array) {
     preorderNode,
     postorderNode,
     heightNode,
+    depthNode,
+    isBalanced,
   };
 }
 
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
 
-function doubleUpNode(parameter) {
-  return parameter * 2;
-}
+// function doubleUpNode(parameter) {
+//   return parameter * 2;
+// }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node.right !== null) {
@@ -229,4 +256,3 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 };
 
 prettyPrint(tree.rootNode);
-tree.heightNode(67);
