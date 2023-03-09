@@ -256,3 +256,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 };
 
 prettyPrint(tree.rootNode);
+console.log(tree.isBalanced());
