@@ -216,12 +216,19 @@ function Tree(array) {
     return !node ? depth(rootNode, rootNode) : depth(rootNode, findNode(node));
   }
 
-  function isBalanced() {
-    return height(rootNode);
+  function isBalanced(root = rootNode) {
+    if (!root) return 0;
+
+    const leftHeight = isBalanced(root.left);
+    const rightHeight = isBalanced(root.right);
+
+    if ((leftHeight > 0 || rightHeight > 0) && root.value === rootNode.value) {
+      const difference = Math.abs(leftHeight - rightHeight);
+      return difference < 1 ? 'Balanced' : 'Not Balanced';
+    } else {
+      return Math.max(leftHeight, rightHeight) + 1;
+    }
   }
-  //return max height of left subtree
-  // return max height of right subtree
-  //if left subtree - right subtree > 1 return false, else return true
 
   return {
     rootNode,
