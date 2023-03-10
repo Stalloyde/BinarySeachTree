@@ -239,14 +239,14 @@ function Tree(parameter) {
 
   function rebalance(root = rootNode, rebalanceArray = []) {
     if (!root) {
-      this.root = buildTree(sortArray(array), 0, sortArray(array).length - 1);
-      return this.root;
+      rootNode = buildTree(sortArray(array), 0, sortArray(array).length - 1);
+      return rootNode;
     }
 
     rebalanceArray.push(root.value);
     rebalance(root.left, rebalanceArray);
     rebalance(root.right, rebalanceArray);
-    return this.root;
+    return rootNode;
   }
 
   return {
@@ -281,5 +281,10 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 tree.insertNode(10);
 prettyPrint(tree.rootNode);
 console.log(tree.isBalanced());
+tree.rebalance();
 prettyPrint(tree.rootNode);
 console.log(tree.isBalanced());
+
+//Tree.buildTree(array)
+//insertNode(10)
+//rebalance()
