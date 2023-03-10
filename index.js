@@ -5,19 +5,26 @@ function NodeFactory(value, left = null, right = null) {
   return { value, left, right };
 }
 
-function Tree(array) {
-  function buildTree(array, start, end) {
+function Tree(parameter) {
+  function buildTree(parameter, start, end) {
     if (start > end) return null;
     const mid = Math.floor((start + end) / 2);
-    const root = NodeFactory(array[mid]);
-    root.left = buildTree(array, start, mid - 1);
-    root.right = buildTree(array, mid + 1, end);
+    const root = NodeFactory(parameter[mid]);
+    root.left = buildTree(parameter, start, mid - 1);
+    root.right = buildTree(parameter, mid + 1, end);
     return root;
   }
 
-  const sortedArray = array.sort((a, b) => a - b);
-  const finalArray = [...new Set(sortedArray)];
-  let rootNode = buildTree(finalArray, 0, finalArray.length - 1);
+  function sortArray(parameter) {
+    const sortedArray = parameter.sort((a, b) => a - b);
+    const finalArray = [...new Set(sortedArray)];
+    return finalArray;
+  }
+  let rootNode = buildTree(
+    sortArray(parameter),
+    0,
+    sortArray(parameter).length - 1
+  );
 
   function insert(root, value) {
     if (root === null) {
@@ -230,6 +237,18 @@ function Tree(array) {
     }
   }
 
+  function rebalance(root = rootNode, rebalanceArray = []) {
+    if (!root) {
+      this.root = buildTree(sortArray(array), 0, sortArray(array).length - 1);
+      return this.root;
+    }
+
+    rebalanceArray.push(root.value);
+    rebalance(root.left, rebalanceArray);
+    rebalance(root.right, rebalanceArray);
+    return this.root;
+  }
+
   return {
     rootNode,
     insertNode,
@@ -242,15 +261,12 @@ function Tree(array) {
     heightNode,
     depthNode,
     isBalanced,
+    rebalance,
   };
 }
 
-const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+let array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
-
-// function doubleUpNode(parameter) {
-//   return parameter * 2;
-// }
 
 const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node.right !== null) {
@@ -262,5 +278,8 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
+tree.insertNode(10);
+prettyPrint(tree.rootNode);
+console.log(tree.isBalanced());
 prettyPrint(tree.rootNode);
 console.log(tree.isBalanced());
