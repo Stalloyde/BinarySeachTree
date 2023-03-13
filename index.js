@@ -237,16 +237,32 @@ function Tree(parameter) {
     }
   }
 
-  function rebalance(root = rootNode, rebalanceArray = []) {
-    if (!root) {
-      rootNode = buildTree(sortArray(array), 0, sortArray(array).length - 1);
+  function rebalance(root = rootNode, queue = [root], rebalanceArray = []) {
+    if (!queue.length || !root) {
+      rootNode = buildTree(
+        sortArray(rebalanceArray),
+        0,
+        sortArray(rebalanceArray).length - 1
+      );
       return rootNode;
     }
 
-    rebalanceArray.push(root.value);
-    rebalance(root.left, rebalanceArray);
-    rebalance(root.right, rebalanceArray);
-    return rootNode;
+    if (root.left !== null && root.right !== null) {
+      queue.push(root.left, root.right);
+    }
+
+    if (root.left !== null && root.right === null) {
+      queue.push(root.left);
+    }
+
+    if (root.left === null && root.right !== null) {
+      queue.push(root.right);
+    }
+
+    const toPush = queue.shift().value;
+    rebalanceArray.push(toPush);
+    const newRoot = queue[0];
+    rebalance(newRoot, queue, rebalanceArray);
   }
 
   return {
@@ -268,23 +284,20 @@ function Tree(parameter) {
 let array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = Tree(array);
 
-const prettyPrint = (node, prefix = '', isLeft = true) => {
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-  }
-  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-  }
-};
+function driver() {
+  console.log(tree.levelOrderNode());
+  console.log(tree.preorderNode());
+  console.log(tree.postorderNode());
+  console.log(tree.isBalanced());
+  tree.insertNode(105);
+  tree.insertNode(253);
+  tree.insertNode(2423);
+  console.log(tree.isBalanced());
+  tree.rebalance();
+  console.log(tree.levelOrderNode());
+  console.log(tree.preorderNode());
+  console.log(tree.postorderNode());
+  console.log(tree.isBalanced());
+}
 
-tree.insertNode(10);
-prettyPrint(tree.rootNode);
-console.log(tree.isBalanced());
-tree.rebalance();
-prettyPrint(tree.rootNode);
-console.log(tree.isBalanced());
-
-//Tree.buildTree(array)
-//insertNode(10)
-//rebalance()
+driver();
